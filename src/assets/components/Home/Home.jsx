@@ -2,9 +2,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./Home.css";
+import Cart from "../Cart/Cart";
 
 const Home = () => {
   const [allActors, setAllActors] = useState([]);
+  const [selectedActors, setSelectedActors] = useState([]);
 
   useEffect(() => {
     fetch("./data.json")
@@ -12,8 +14,20 @@ const Home = () => {
       .then((data) => setAllActors(data));
   }, []);
 
+  const handleSelectActors = (actor) => {
 
-  console.log(allActors);
+        const isExist = selectedActors.find(item => item.id == actor.id);
+        if (isExist){
+            return alert ('Already Booked')
+        }
+        else{
+            setSelectedActors([...selectedActors, actor])
+        }
+  };
+//   console.log(selectedActors);
+
+
+//   console.log(allActors);
   return (
     <div className="container">
       <div className="home-container">
@@ -40,12 +54,12 @@ const Home = () => {
                                 }</p>
                   <p>{actor.role}</p>
                 </div>
-                <button className="card-btn">Select</button>
+                <button onClick={() => handleSelectActors(actor)} className="card-btn">Select</button>
             </div>
           ))}
         </div>
         <div className="cart">
-          <h1>This is Cart</h1>
+         <Cart selectedActors = {selectedActors}></Cart>
         </div>
       </div>
     </div>
