@@ -7,6 +7,8 @@ import Cart from "../Cart/Cart";
 const Home = () => {
   const [allActors, setAllActors] = useState([]);
   const [selectedActors, setSelectedActors] = useState([]);
+  const [remaining, setRemaining] = useState (0);
+  const [totalCost, setTotalCost] = useState (0);
 
   useEffect(() => {
     fetch("./data.json")
@@ -17,11 +19,27 @@ const Home = () => {
   const handleSelectActors = (actor) => {
 
         const isExist = selectedActors.find(item => item.id == actor.id);
+        
+        let count = actor.salary;
+
         if (isExist){
             return alert ('Already Booked')
         }
         else{
+
+            selectedActors.forEach((item) =>{
+                count = count + item.salary;
+            })
+            const totalRemaining = 50000 - count;
+            
+            if (count > 50000) {
+               return alert ('TK ses r hobena');
+            }
+           else {
+            setTotalCost(count);
+            setRemaining(totalRemaining);
             setSelectedActors([...selectedActors, actor])
+           }
         }
   };
 //   console.log(selectedActors);
@@ -43,6 +61,7 @@ const Home = () => {
                 />
               </div>
               <h2>{actor.name}</h2>
+              
                 <p>
                   <small>
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
@@ -59,7 +78,9 @@ const Home = () => {
           ))}
         </div>
         <div className="cart">
-         <Cart selectedActors = {selectedActors}></Cart>
+         <Cart selectedActors = {selectedActors} remaining = {remaining}
+         totalCost = {totalCost}
+         ></Cart>
         </div>
       </div>
     </div>
